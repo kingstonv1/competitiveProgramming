@@ -1,20 +1,19 @@
-def SieveOfEratosthenes(x, num):
-    prime = [True for i in range(num+1)]
+# Timelimit :((
+def primes(low, high):
+    prime = [True for i in range(high + 1)]
+
     p = 2
-    while (p * p <= num):
-        # If prime[p] is not
-        # changed, then it is a prime
-        if (prime[p] == True):
-            # Updating all multiples of p
-            for i in range(p * p, num+1, p):
+    while p * p <= high:
+        if prime[p]:
+            for i in range(p * p, high + 1, p):
                 prime[i] = False
         p += 1
-    # Print all prime numbers
-    for p in range(2, num+1):
-        if prime[p]:
-            if p > x:
-                print(p)
 
-for _ in range (int(input())):
-    nums = input().split()
-    SieveOfEratosthenes(int(nums[0]), int(nums[1]))
+    for p in range(2, high + 1):
+        if prime[p]:
+            print(p)
+
+
+for _ in range(int(input())):
+    nums = list(map(int, input().split()))
+    primes(nums[0], nums[1])
