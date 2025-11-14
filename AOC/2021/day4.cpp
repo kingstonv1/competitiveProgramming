@@ -68,7 +68,6 @@ bool Bingo::check_straights() {
     }
 
     if (flag) {
-      cout << "Found a horizontal straight at row " << r + 1 << "\n";
       return true;
     }
   }
@@ -82,7 +81,6 @@ bool Bingo::check_straights() {
     }
 
     if (flag) {
-      cout << "Found a vertical straight at column " << r + 1 << "\n";
       return true;
     }
   }
@@ -187,10 +185,70 @@ int p1(vector<string> input) {
     }
   }
 
+  // Sentinel if something goes wrong
   return 4459;
 }
 
 int p2(vector<string> input) {
+  vector<int> draw;
+  string buf;
+
+  // Parse the drawn numbers from string
+  string bingo_nums = input[0];
+  for (size_t i = 0; i < bingo_nums.length(); i++) {
+    if (bingo_nums[i] == ',') {
+      draw.push_back(stoi(buf));
+      buf = "";
+      continue;
+    }
+
+    buf += bingo_nums[i];
+  }
+
+  draw.push_back(stoi(buf));
+
+  // Next process the boards
+  vector<Bingo> boards;
+  vector<string> board_buffer;
+
+  for (size_t i = 2; i < input.size(); i++) {
+    if (input[i].empty()) {
+      Bingo new_board(board_buffer);
+      boards.push_back(new_board);
+      board_buffer.clear();
+      continue;
+    }
+
+    board_buffer.push_back(input[i]);
+  }
+
+  Bingo new_board(board_buffer);
+  boards.push_back(new_board);
+
+  vector<Bingo> filtered;
+  // Now we have the boards. Simulate Bingo
+  for (int next_num: draw) {
+    filtered.clear();
+
+    for (size_t b = 0; b < boards.size(); b++) {
+      boards[b].add_num(next_num);
+
+      if (boards[b].has_bingo()) {
+        if (boards.size() == 1) {
+          cout << "Last board:\n";
+          boards[0].print();
+          return boards[0].sum_unmarked() * boards[0].last_num;
+        }
+
+        continue;
+      }
+
+      filtered.push_back(boards[b]);
+    }
+
+    boards = filtered;
+  }
+
   return 1771;
 }
 
