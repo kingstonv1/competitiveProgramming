@@ -3,8 +3,24 @@
 #include <string>
 #include <utility>
 #include <algorithm>
+#include <cmath>
 
 using namespace std;
+
+void print_grid(const vector<vector<int>>& grid) {
+  for (vector<int> line: grid) {
+    for (int num: line) {
+      if (num == 0) {
+        cout << ".";
+        continue;
+      }
+
+      cout << num;
+    }
+    
+    cout << '\n';
+  }
+}
 
 // The type is cooked I know
 vector<vector<pair<int, int>>> extract_pairs(vector<string> input) {
@@ -68,14 +84,14 @@ vector<vector<int>> generate_grid(vector<pair<int, int>> b, vector<pair<int, int
     } 
 
     // Diagonals
-    // Handle left to right on coordinate plane, increasing or decreasing y 
-    // depending on whether the diagonal is sloped up or down.
-    int start_x = min(x1, x2);
-    int y = y1;
+    int x_slope = (x2 - x1) / abs(x2 - x1); // Get (correctly signed) slope for diagonal - which is either -1 or 1
+    int y_slope = (y2 - y1) / abs(y2 - y1);
+    int x = x1, y = y1;
 
-    for (int x = start_x; x < max(x1, x2); x++) {
-      if (y1 < y2) grid[y++][x]++;
-      else grid[y--][x]++;
+    for (int i = 0; i <= abs(x1 - x2); i++) {
+      grid[y][x]++;
+      x += x_slope;
+      y += y_slope;
     }
   }
 
@@ -89,13 +105,7 @@ int p1(vector<string> input) {
 
   vector<vector<int>> grid = generate_grid(b, e);
 
-  for (vector<int> row: grid) {
-    for (int i: row) {
-      cout << i;
-    }
-
-    cout << endl;
-  }
+  print_grid(grid);
 
   int sum = 0;
 
