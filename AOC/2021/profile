@@ -1,0 +1,1 @@
+valgrind --tool=callgrind -v --dump-instr=yes --simulate-cache=yes --collect-jumps=yes ./$1 $2 < $3
