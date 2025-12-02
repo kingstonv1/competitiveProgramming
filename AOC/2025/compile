@@ -1,0 +1,1 @@
+g++ $1.cpp -Wpedantic -Wall -o $1 -O3
